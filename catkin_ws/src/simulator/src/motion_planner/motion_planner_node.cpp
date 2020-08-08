@@ -87,6 +87,8 @@ int main(int argc ,char **argv)
     float initialPosition[2] = {0,0};
     float max_light_intensity = 0;
     bool circledOnce = 0;
+    bool connToRemove[4] = {0,0,0,0};
+
 
     float pos_x;
     float pos_y;
@@ -346,7 +348,7 @@ int main(int argc ,char **argv)
                 if(flagOnce)
                 {
                     for(i = 0; i < 200; i++)steps[i].node=-1;
-                    astar(params.robot_x ,params.robot_y ,params.light_x ,params.light_y ,params.world_name,steps);
+                    astar(params.robot_x ,params.robot_y ,params.light_x ,params.light_y ,params.world_name,steps,connToRemove);
                     print_algorithm_graph (steps);
                     i=0;
                     final_x=params.light_x;
@@ -376,9 +378,31 @@ int main(int argc ,char **argv)
                     pos_history[1]=params.robot_y;
 
                     printf("diferencias: %f %f %d",diferencia_x,diferencia_y,cont_similar);
+                    bool allRemoved = !(connToRemove[0]&&connToRemove[1]&&connToRemove[2]&&connToRemove[3]);
+                    if(allRemoved&&doorDetected(previousSteps[0],previousSteps[1],steps[i-1].x,steps[i-1].y,q_inputs)){
+                        printf("\n******Door detected at node %d. Recalculating route.********\n", steps[i-1].node);
+                        switch(steps[i-1].node){
+                            case 16:
+                            case 0:
+                            connToRemove[0]=1;
+                            break;
 
-                    if(doorDetected(previousSteps[0],previousSteps[1],steps[i-1].x,steps[i-1].y,q_inputs)){
-                        printf("\n******Door detected. Recalculating route.********\n");
+                            case 38:
+                            case 31:
+                            connToRemove[1]=1;
+                            break;
+
+                            case 32:
+                            case 36:
+                            connToRemove[2]=1;
+                            break;
+
+                            case 10:
+                            case 22:
+                            connToRemove[3]=1;
+                            break;
+                        }
+                        flagOnce = 1;
                     }
 
                     if(cont_similar<30)

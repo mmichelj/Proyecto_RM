@@ -108,8 +108,9 @@ float heuristic(float x_, float y_, float xf, float yf){
 void astar_algorithm(int D ,int L)
 {
    /*
-      D = Nodo Inicial
-      L = Nodo Final
+
+      D = Nodo Inicial (goal)
+      L = Nodo Final (start)
       Y = Totalmente expandido
       N = Nuevo (Nodo sin padre ni acumulado)
       P = Nodo que no es ni Y ni N   (Parcialmente expandido)
@@ -122,6 +123,8 @@ void astar_algorithm(int D ,int L)
    int j;
 
    nodes[D].acumulado = 0;
+
+  
 
    while( nodes[L].flag != 'Y')
    {  
@@ -169,7 +172,7 @@ void astar_algorithm(int D ,int L)
 
 
 
-int astar(float rx ,float ry ,float lx ,float ly, char *world_name,step *steps )
+int astar(float rx ,float ry ,float lx ,float ly, char *world_name,step *steps, bool connRemove[])
 {
    char archivo[150];
    int i;
@@ -203,6 +206,33 @@ int astar(float rx ,float ry ,float lx ,float ly, char *world_name,step *steps )
    		if( sqrt(pow( nodes[i].x - lx ,2) + pow( nodes[i].y - ly ,2)) < sqrt(pow( nodes[goal].x - lx ,2) + pow( nodes[goal].y - ly ,2) ) )
    			goal = i;
    }
+
+    /*
+   *
+   * Esta parte del código 'retira' la conexión existente entre dos nodos que podrían estar bloqueados por una puerta.
+   * 
+   * */
+
+  if(connRemove[0]){
+      nodes[0].conections[1].cost = 10000;
+      nodes[16].conections[0].cost = 10000;
+  }
+
+  if(connRemove[1]){
+      nodes[38].conections[2].cost = 10000;
+      nodes[31].conections[2].cost = 10000;
+  }
+
+   if(connRemove[2]){
+      nodes[32].conections[2].cost = 10000;
+      nodes[36].conections[2].cost = 10000;
+   }
+
+   if(connRemove[3]){
+      nodes[22].conections[0].cost = 10000;
+      nodes[10].conections[1].cost = 10000;
+   }
+
 
    astar_algorithm (goal ,start); // Se pasan al reves para no tener que voltear la lista resultante.
    
