@@ -193,9 +193,9 @@ iz = de = salida = 0;
 	Ftot[0]=Ftot[0]/mFtot;
 	Ftot[1]=Ftot[1]/mFtot;
 
-	printf("************** Frep[%d]: (%f,%f) Fatr[%d]=(%f,%f)***************\n\n", i, Frep[0],Frep[1],i,Fatr[0],Fatr[1]);
+	//printf("************** Frep[%d]: (%f,%f) Fatr[%d]=(%f,%f)***************\n\n", i, Frep[0],Frep[1],i,Fatr[0],Fatr[1]);
 
-	printf("******** Ftot[0]=%f Ftot[1]=%f ********", Ftot[0],Ftot[1]);
+	//printf("******** Ftot[0]=%f Ftot[1]=%f ********", Ftot[0],Ftot[1]);
 
 	//********** Gradient descent ************//
 	qn[0]=-max_advance*Ftot[0];

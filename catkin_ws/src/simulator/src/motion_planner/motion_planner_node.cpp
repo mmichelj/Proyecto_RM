@@ -28,6 +28,7 @@
 #include "../action_planner/action_planner.h"
 #include "../state_machines/campos_potenciales.h"
 #include "../state_machines/astar.h"
+#include "../utilities/final_utilities.h"
 
 
 int main(int argc ,char **argv)
@@ -57,6 +58,7 @@ int main(int argc ,char **argv)
     int flg_noise=0;
     int vuelta;
     int bug_sm=0;
+    int prevoiusNode = 0;
 
     int q_inputs2=0;
     int stepCounter;
@@ -69,6 +71,7 @@ int main(int argc ,char **argv)
     float max_turn_angle;
     float noise_advance;
     float noise_angle;
+    float previousSteps[2]={0,0};
 
     float pendiente;
     float Xo;
@@ -95,11 +98,6 @@ int main(int argc ,char **argv)
     float qydes;
     float theta;
     
-
-    /*float pos_history[2][10]={
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-    };*/
 
     float pos_history[2]={0,0};
     float diferencia_x=0;
@@ -348,19 +346,21 @@ int main(int argc ,char **argv)
                 if(flagOnce)
                 {
                     for(i = 0; i < 200; i++)steps[i].node=-1;
-                    // it finds a path from the origen to a destination using the Dijkstra algorithm
                     astar(params.robot_x ,params.robot_y ,params.light_x ,params.light_y ,params.world_name,steps);
                     print_algorithm_graph (steps);
                     i=0;
                     final_x=params.light_x;
                     final_y= params.light_y;
                     set_light_position(steps[i].x,steps[i].y);
+                    previousSteps[0] = steps[i].x;
+                    previousSteps[1] = steps[i].y;
                     printf("New Light %d: x = %f  y = %f \n",i,steps[i].x,steps[i].y);
                     flagOnce = 0;
                     flg_finish=0;
                     est_sig = 0;
                     movements.twist=0.0;
                     movements.advance =0.0;
+                    prevoiusNode  = steps[i].node;
                 }
                 else
                 {
@@ -376,6 +376,10 @@ int main(int argc ,char **argv)
                     pos_history[1]=params.robot_y;
 
                     printf("diferencias: %f %f %d",diferencia_x,diferencia_y,cont_similar);
+
+                    if(doorDetected(previousSteps[0],previousSteps[1],steps[i-1].x,steps[i-1].y,q_inputs)){
+                        printf("\n******Door detected. Recalculating route.********\n");
+                    }
 
                     if(cont_similar<30)
                     {
@@ -407,12 +411,16 @@ int main(int argc ,char **argv)
                         {
                             if(steps[i].node != -1)
                             {
-                                set_light_position(steps[i].x,steps[i].y);
-                                printf("New Light %d: x = %f  y = %f \n",i,steps[i].x,steps[i].y);
+                                if(i!=0){
+                                previousSteps[0] = steps[i-1].x;
+                                previousSteps[1] = steps[i-1].y;
+                                prevoiusNode = steps[i-1].node;
+                                }
+                                printf("\n-------Current node [%d]: x = %f y = %f\n", prevoiusNode, previousSteps[0], previousSteps[1]);
+                                set_light_position(steps[i].x,steps[i].y); 
+                                printf("---------New Light %d: x = %f  y = %f \n",i,steps[i].x,steps[i].y);
                                 printf("Node %d\n",steps[i].node);
                                 i++;
-                                //printf("type a number \n");
-                                //scanf("%d",&tmp);
                             }
                             else
                             {
@@ -453,3 +461,5 @@ int main(int argc ,char **argv)
         r.sleep();
     }
 }
+
+
