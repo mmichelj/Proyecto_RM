@@ -1,6 +1,6 @@
-blockA .2 .1
-blockB .3 .1
-blockC .1 .1
-blockD .7 .8
-blockE .6 .8
-blockF .8 .8
+apple 0.2 1.1
+sushi 0.3 1.1
+milk 0.4 1.1
+soap 0.2 1.0
+perf 0.3 1.0
+sham 0.4 1.0

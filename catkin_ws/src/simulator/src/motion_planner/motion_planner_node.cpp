@@ -59,6 +59,7 @@ int main(int argc ,char **argv)
     int vuelta;
     int bug_sm=0;
     int prevoiusNode = 0;
+    int userBehavior = 0;
 
     int q_inputs2=0;
     int stepCounter;
