@@ -1,7 +1,7 @@
 # Proyecto: Planeación de Acciones Usando una Representación Espacio-Estado
 
 
-![GUI](https://raw.githubusercontent.com/mmichelj/Proyecto_RM/master/screenshot.png)
+![GUI](https://raw.githubusercontent.com/mmichelj/Proyecto_RM/master/screenshot2.png)
 
 ## Objetivo
 
