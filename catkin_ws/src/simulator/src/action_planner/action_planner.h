@@ -68,7 +68,12 @@ int start_clips_node_action_planner(){
 
 }
 
+void moveBehavior(float goalx, float goaly, float distance, float angle, int behavior){
 
+
+
+
+}
 
 /*
 This function is used to calculate the rotation angle for the Mvto command
@@ -151,10 +156,21 @@ void action_planner(float px, float py, float theta, movement *movements, int *u
        		printf("*****Room %s zone %s x %f y %f\n",room,zone,x,y);
        		printf("Pose x %f y %f theta %f\n",px,py,theta);
 
-           *goalX = x;
-           *goalY = y;
+           //*goalX = x;
+           //*goalY = y;
 
-           *userBehavior = 11;
+           //*userBehavior = 11;
+
+           get_distance_theta(x,y,theta,px,py,&distance,&angle);
+
+           if(distance < 0.6){
+              movements->twist = angle;
+              movements->advance = distance;
+            } else {
+              *goalX = x;
+              *goalY = y;
+              *userBehavior = 11;
+            }
 
 		//get_distance_theta(x,y,theta,px,py,&distance,&angle);
 		//printf("goto angle %f distance %f\n",angle,distance);
@@ -224,8 +240,20 @@ void action_planner(float px, float py, float theta, movement *movements, int *u
 		            get_distance_theta(x,y,theta,px,py,&distance,&angle);
                 printf("mv angle %f distance %f\n",angle,distance);
 
-                movements->twist = angle;
-                movements->advance = distance;
+                printf("*********************************************************************\n EL ROBOT SE QUIERE MOVER A x %f y %f", x,y);
+
+                if(distance < 0.8){
+                  movements->twist = angle;
+                  movements->advance = distance;
+                } else {
+                  *goalX = x;
+                  *goalY = y;
+                  *userBehavior = 11;
+                 }
+
+                
+                //movements->twist = angle;
+                //movements->advance = distance;
 
                 //*goalX = x;
                 //*goalY = y;
@@ -249,6 +277,8 @@ void action_planner(float px, float py, float theta, movement *movements, int *u
 
   if(strcmp(action,"grab")==0 || strcmp(action,"drop")==0)
   {
+    if(strcmp(action,"grab")==0)
+      printf("+++++++++++++++++ GRAB %s ++++++++++++++++++++++++++++++++\n+++++++++++++++ \n++++++++++++++++++++++++++++\n++++++++++++++++++++", action);
     sscanf(result.c_str(),"%s %s %s",ROS_System,action,object);
     printf("%s object %s\n",action,object);
 
@@ -286,22 +316,51 @@ void action_planner(float px, float py, float theta, movement *movements, int *u
 
 		if(strcmp(room,"any")==0){
 			j++;
+      if(j==3)j=1;
+      printf("\n*******************************************************************\n*ESTE ES EL VALOR DE J: %d\n*****************\n*\n*\n ", j);
+			
+      *goalX = px + 2*j*0.1;
+      *goalY = py;
 
-      printf("\n*******************************************************************\n*ESTE ES EL VALOR DE J:\n*****************\n*\n*\n %d", j);
-			//if(j==3)j=1;
-			movements->twist = - 0.3*j;
-                	movements->advance = 0.04*j;
-                	printf("go j %d any angle %f distance %f\n",j,angle,distance);
+      get_distance_theta(x,y,theta,px,py,&distance,&angle);
+      printf("mv angle %f distance %f\n",angle,distance);
+
+      if(distance < 0.8){
+        movements->twist = angle;
+        movements->advance = distance;
+      } else {
+        *userBehavior = 11;
+      }
+
+      
+
+      /*
+      *
+      * TODO: Si el cuarto es "any", mantener posición en y, obtner posición en x mediante x = x + j*0.2 
+      * 
+      * */
+
+
+			//movements->twist = - 0.3*j;
+                	//movements->advance = 0.04*j;
+      printf("go j %d any angle %f distance %f\n",j,angle,distance);
 		}
 		else{
 			k++;
 			if(k==3)k=1;
 
 			get_distance_theta(x,y,theta,px,py,&distance,&angle);
-			movements->twist = angle;
-			movements->advance = distance - 0.045*k;
 
-                	printf("go k %d angle %f distance %f\n",k,angle,distance);
+      if(distance < 0.8){
+        movements->twist = angle;
+        movements->advance = distance - 0.045*k;
+      } else {
+        *goalX = x;
+        *goalY = y;
+        *userBehavior = 11;
+      }
+
+       printf("go k %d angle %f distance %f\n",k,angle,distance);
 		}
 
 

@@ -438,6 +438,7 @@ int main(int argc ,char **argv)
                         if(flg_finish == 1) {
                             //stop();
                             userBehavior = 10;
+                            flagOnce=1;
                         }
                         
 
