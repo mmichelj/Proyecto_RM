@@ -125,6 +125,7 @@ void action_planner(float px, float py, float theta, movement *movements, int *u
        static char object[100];
        static float distance=1.0;
        static float angle=0.0;
+       float minDistance = 0.85;
 
        movements->twist = 0.0;
        movements->advance = 0.0;
@@ -163,7 +164,7 @@ void action_planner(float px, float py, float theta, movement *movements, int *u
 
            get_distance_theta(x,y,theta,px,py,&distance,&angle);
 
-           if(distance < 0.6){
+           if(distance < minDistance){
               movements->twist = angle;
               movements->advance = distance;
             } else {
@@ -242,7 +243,7 @@ void action_planner(float px, float py, float theta, movement *movements, int *u
 
                 printf("*********************************************************************\n EL ROBOT SE QUIERE MOVER A x %f y %f", x,y);
 
-                if(distance < 0.8){
+                if(distance < minDistance){
                   movements->twist = angle;
                   movements->advance = distance;
                 } else {
@@ -325,7 +326,7 @@ void action_planner(float px, float py, float theta, movement *movements, int *u
       get_distance_theta(x,y,theta,px,py,&distance,&angle);
       printf("mv angle %f distance %f\n",angle,distance);
 
-      if(distance < 0.8){
+      if(distance < minDistance){
         movements->twist = angle;
         movements->advance = distance;
       } else {
@@ -351,7 +352,7 @@ void action_planner(float px, float py, float theta, movement *movements, int *u
 
 			get_distance_theta(x,y,theta,px,py,&distance,&angle);
 
-      if(distance < 0.8){
+      if(distance < minDistance){
         movements->twist = angle;
         movements->advance = distance - 0.045*k;
       } else {
