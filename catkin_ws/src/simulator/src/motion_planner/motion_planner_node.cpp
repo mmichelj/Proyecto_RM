@@ -59,7 +59,7 @@ int main(int argc ,char **argv)
     int vuelta;
     int bug_sm=0;
     int prevoiusNode = 0;
-    int userBehavior = 0;
+    int userBehavior = 10;
 
     int q_inputs2=0;
     int stepCounter;
@@ -73,6 +73,8 @@ int main(int argc ,char **argv)
     float noise_advance;
     float noise_angle;
     float previousSteps[2]={0,0};
+    float goalx = 0;
+    float goaly = 0;
 
     float pendiente;
     float Xo;
@@ -156,7 +158,7 @@ int main(int argc ,char **argv)
             max_advance = params.robot_max_advance;
             max_turn_angle = params.robot_turn_angle;
 
-            switch ( params.behavior)
+            switch (userBehavior)
             {
 
             case 1:
@@ -338,8 +340,8 @@ int main(int argc ,char **argv)
 
             
             case 10:
-
-		        action_planner(params.robot_x, params.robot_y,params.robot_theta,&movements);
+                printf("\n*\n*\n*Goal x: %f *******************************  Goal Y : %f*\n*\n*\n", goalx, goaly);
+		        action_planner(params.robot_x, params.robot_y,params.robot_theta,&movements,&userBehavior,&goalx,&goaly);
 
                 break;
             
@@ -348,8 +350,10 @@ int main(int argc ,char **argv)
 
                 if(flagOnce)
                 {
+                    params.light_x = goalx;
+                    params.light_y = goaly;
                     for(i = 0; i < 200; i++)steps[i].node=-1;
-                    astar(params.robot_x ,params.robot_y ,params.light_x ,params.light_y ,params.world_name,steps,connToRemove);
+                    astar(params.robot_x ,params.robot_y,params.light_x ,params.light_y ,params.world_name,steps,connToRemove);
                     print_algorithm_graph (steps);
                     i=0;
                     final_x=params.light_x;
@@ -413,7 +417,7 @@ int main(int argc ,char **argv)
                         } else{
                         cont_similar=0;
                         }
-                        flg_result = campos_potenciales(intensity, light_readings,&movements,max_advance,max_turn_angle,lidar_readings,params.laser_num_sensors,params.laser_value,params.laser_origin,params.laser_range);
+                        flg_result = campos_potenciales( intensity, light_readings,&movements,max_advance,max_turn_angle,lidar_readings,params.laser_num_sensors,params.laser_value,params.laser_origin,params.laser_range);
                     }
 
                     if(cont_similar>=30 && cont_similar<40){
@@ -431,7 +435,12 @@ int main(int argc ,char **argv)
 
                     if(flg_result == 1)
                     {
-                        if(flg_finish == 1) stop();
+                        if(flg_finish == 1) {
+                            //stop();
+                            userBehavior = 10;
+                        }
+                        
+
                         else
                         {
                             if(steps[i].node != -1)

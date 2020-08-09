@@ -43,7 +43,7 @@
 	( Room (name kitchen)(zone deposit)(zones dummy1 frontexit frontentrance deposit dummy2)(center 0.45 0.20))
 	( Room (name bedroom)(zone deposit)(zones dummy1 frontexit frontentrance deposit dummy2)(center 0.4 0.10))
 
-	( Room (name corridor)(zone amazon)(zones dummy1 frontexit frontentrance deposit dummy2)(center 1.04 0.30))
+	( Room (name corridor)(zone amazon)(zones dummy1 frontexit frontentrance deposit dummy2)(center 0.56 1.04))
 	( Room (name kitchen)(zone fridge)(zones dummy1 frontexit frontentrance deposit dummy2)(center 1.5 1.4))
 	( Room (name service)(zone table)(zones dummy1 frontexit frontentrance deposit dummy2)(center 1.65 0.36))
 

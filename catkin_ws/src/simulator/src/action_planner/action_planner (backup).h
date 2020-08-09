@@ -103,7 +103,7 @@ void get_distance_theta(float x,float y,float angle,float x1,float y1,float *dis
 
 
 
-void action_planner(float px, float py, float theta, movement *movements, int *userBehavior,float *goalX, float *goalY){
+void action_planner(float px, float py, float theta, movement *movements){
 
        static int mini_sm=1;
        static char object_name[200];
@@ -151,16 +151,11 @@ void action_planner(float px, float py, float theta, movement *movements, int *u
        		printf("*****Room %s zone %s x %f y %f\n",room,zone,x,y);
        		printf("Pose x %f y %f theta %f\n",px,py,theta);
 
-           *goalX = x;
-           *goalY = y;
+		get_distance_theta(x,y,theta,px,py,&distance,&angle);
+		printf("goto angle %f distance %f\n",angle,distance);
 
-           *userBehavior = 11;
-
-		//get_distance_theta(x,y,theta,px,py,&distance,&angle);
-		//printf("goto angle %f distance %f\n",angle,distance);
-
-		//movements->twist = angle;
-     //           movements->advance = distance;
+		movements->twist = angle;
+                movements->advance = distance;
 
 
 		//answer ?sender command goto ?room ?zone ?x ?y ?flg
@@ -218,23 +213,11 @@ void action_planner(float px, float py, float theta, movement *movements, int *u
                 sscanf(result.c_str(),"%s %s %f %f",ROS_System,action,&x,&y);
 
                 printf("%s %f %f\n",action,x,y);
-
-/************************************************************************/
-
 		            get_distance_theta(x,y,theta,px,py,&distance,&angle);
                 printf("mv angle %f distance %f\n",angle,distance);
 
                 movements->twist = angle;
                 movements->advance = distance;
-
-                //*goalX = x;
-                //*goalY = y;
-
-                //*userBehavior = 11;
-
-/************************************************************************/
-
-
 
 		//(answer ?sender command mv ?distance ?angle ?flg)
                 sprintf(str,"(assert (answer %s command %s %f %f 1))",ROS_System,action,distance,angle);
@@ -286,8 +269,6 @@ void action_planner(float px, float py, float theta, movement *movements, int *u
 
 		if(strcmp(room,"any")==0){
 			j++;
-
-      printf("\n*******************************************************************\n*ESTE ES EL VALOR DE J:\n*****************\n*\n*\n %d", j);
 			//if(j==3)j=1;
 			movements->twist = - 0.3*j;
                 	movements->advance = 0.04*j;
@@ -296,11 +277,9 @@ void action_planner(float px, float py, float theta, movement *movements, int *u
 		else{
 			k++;
 			if(k==3)k=1;
-
 			get_distance_theta(x,y,theta,px,py,&distance,&angle);
 			movements->twist = angle;
 			movements->advance = distance - 0.045*k;
-
                 	printf("go k %d angle %f distance %f\n",k,angle,distance);
 		}
 
