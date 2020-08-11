@@ -440,8 +440,6 @@ int main(int argc ,char **argv)
                             userBehavior = 10;
                             flagOnce=1;
                         }
-                        
-
                         else
                         {
                             if(steps[i].node != -1)
@@ -456,6 +454,7 @@ int main(int argc ,char **argv)
                                 printf("---------New Light %d: x = %f  y = %f \n",i,steps[i].x,steps[i].y);
                                 printf("Node %d\n",steps[i].node);
                                 i++;
+                                flg_result = 0;
                             }
                             else
                             {

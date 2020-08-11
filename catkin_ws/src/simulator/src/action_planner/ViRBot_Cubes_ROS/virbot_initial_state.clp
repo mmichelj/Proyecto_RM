@@ -62,11 +62,13 @@
         ;(stack bedroom deposit blockB blockA blockC)
         ;(stack livingroom storage blockE blockD blockF)
 
-		(stack corridor amazon apple sushi milk)
+		
         (stack corridor amazon soap perf sham)
+		(stack corridor amazon apple sushi milk)
 
-		(real-stack corridor amazon apple sushi milk)
+		
         (real-stack corridor amazon soap perf sham)
+		(real-stack corridor amazon apple sushi milk)
 
         ;(real-stack bedroom deposit blockB blockA blockC)
         ;(real-stack livingroom storage blockE blockD blockF)
@@ -78,8 +80,9 @@
 	;(goal-stack 1 bedroom deposit blockD blockA blockF)
 	;(goal-stack 2 livingroom storage blockB blockE blockC)
 
-	(goal-stack 1 kitchen fridge sushi apple milk)
-	(goal-stack 2 service table soap perf sham)
+	
+	(goal-stack 1 service table soap perf sham)
+	(goal-stack 2 kitchen fridge sushi apple milk)
 
         (plan (name cubes) (number 0)(duration 0))
 
